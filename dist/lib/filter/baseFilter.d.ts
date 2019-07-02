@@ -1,13 +1,22 @@
-// Type definitions for ag-grid v12.0.0
+// Type definitions for ag-grid-community v20.2.0
 // Project: http://www.ag-grid.com/
-// Definitions by: Niall Crosby <https://github.com/ceolter/>
+// Definitions by: Niall Crosby <https://github.com/ag-grid/>
 import { Component } from "../widgets/component";
-import { IFilterComp, IDoesFilterPassParams, IFilterParams } from "../interfaces/iFilter";
-import { Context } from "../context/context";
+import { IFilterOptionDef, IDoesFilterPassParams, IFilterComp, IFilterParams } from "../interfaces/iFilter";
 import { GridOptionsWrapper } from "../gridOptionsWrapper";
 import { FloatingFilterChange } from "./floatingFilter";
+import { INumberFilterParams, ITextFilterParams } from "./textFilter";
 export interface Comparator<T> {
     (left: T, right: T): number;
+}
+export declare enum FilterConditionType {
+    MAIN = 0,
+    CONDITION = 1
+}
+export interface CombinedFilter<T> {
+    operator: string;
+    condition1: T;
+    condition2: T;
 }
 /**
  * T(ype) The type of this filter. ie in DateFilter T=Date
@@ -19,6 +28,7 @@ export interface Comparator<T> {
  * get/setModel context wiring....
  */
 export declare abstract class BaseFilter<T, P extends IFilterParams, M> extends Component implements IFilterComp {
+    static EMPTY: string;
     static EQUALS: string;
     static NOT_EQUAL: string;
     static LESS_THAN: string;
@@ -31,15 +41,21 @@ export declare abstract class BaseFilter<T, P extends IFilterParams, M> extends 
     static STARTS_WITH: string;
     static ENDS_WITH: string;
     private newRowsActionKeep;
+    customFilterOptions: {
+        [name: string]: IFilterOptionDef;
+    };
     filterParams: P;
     clearActive: boolean;
     applyActive: boolean;
     defaultFilter: string;
-    filter: string;
+    selectedFilter: string;
+    selectedFilterCondition: string;
     private eButtonsPanel;
+    private eFilterBodyWrapper;
     private eApplyButton;
     private eClearButton;
-    context: Context;
+    private eConditionWrapper;
+    conditionValue: string;
     gridOptionsWrapper: GridOptionsWrapper;
     init(params: P): void;
     onClearButton(): void;
@@ -47,49 +63,77 @@ export declare abstract class BaseFilter<T, P extends IFilterParams, M> extends 
     abstract isFilterActive(): boolean;
     abstract modelFromFloatingFilter(from: string): M;
     abstract doesFilterPass(params: IDoesFilterPassParams): boolean;
-    abstract bodyTemplate(): string;
-    abstract resetState(): void;
-    abstract serialize(): M;
-    abstract parse(toParse: M): void;
-    abstract refreshFilterBodyUi(): void;
-    abstract initialiseFilterBodyUi(): void;
+    abstract bodyTemplate(type: FilterConditionType): string;
+    abstract resetState(resetConditionFilterOnly?: boolean): void;
+    abstract serialize(type: FilterConditionType): M;
+    abstract parse(toParse: M, type: FilterConditionType): void;
+    abstract refreshFilterBodyUi(type: FilterConditionType): void;
+    abstract initialiseFilterBodyUi(type: FilterConditionType): void;
+    abstract isFilterConditionActive(type: FilterConditionType): boolean;
     floatingFilter(from: string): void;
     onNewRowsLoaded(): void;
-    getModel(): M;
-    getNullableModel(): M;
-    setModel(model: M): void;
-    private doOnFilterChanged(applyNow?);
-    onFilterChanged(): void;
+    getModel(): M | CombinedFilter<M>;
+    getNullableModel(): M | CombinedFilter<M>;
+    setModel(model: M | CombinedFilter<M>): void;
+    private doOnFilterChanged;
+    onFilterChanged(applyNow?: boolean): void;
+    private redrawCondition;
+    private refreshOperatorUi;
     onFloatingFilterChanged(change: FloatingFilterChange): boolean;
-    generateFilterHeader(): string;
-    private generateTemplate();
+    generateFilterHeader(type: FilterConditionType): string;
+    private generateTemplate;
+    acceptsBooleanLogic(): boolean;
+    wrapCondition(mainCondition: string): string;
+    private createConditionTemplate;
+    private createConditionBody;
     translate(toTranslate: string): string;
+    getDebounceMs(filterParams: ITextFilterParams | INumberFilterParams): number;
+    doesFilterHaveHiddenInput(filterType: string): boolean;
 }
 /**
  * Every filter with a dropdown where the user can specify a comparing type against the filter values
  */
-export declare abstract class ComparableBaseFilter<T, P extends IFilterParams, M> extends BaseFilter<T, P, M> {
+export declare abstract class ComparableBaseFilter<T, P extends IComparableFilterParams, M> extends BaseFilter<T, P, M> {
     private eTypeSelector;
+    private eTypeConditionSelector;
+    private suppressAndOrCondition;
     abstract getApplicableFilterTypes(): string[];
-    abstract filterValues(): T | T[];
+    abstract filterValues(type: FilterConditionType): T | T[];
+    abstract individualFilterPasses(params: IDoesFilterPassParams, type: FilterConditionType): boolean;
+    doesFilterPass(params: IDoesFilterPassParams): boolean;
     init(params: P): void;
     customInit(): void;
-    generateFilterHeader(): string;
-    initialiseFilterBodyUi(): void;
+    acceptsBooleanLogic(): boolean;
+    generateFilterHeader(type: FilterConditionType): string;
+    initialiseFilterBodyUi(type: FilterConditionType): void;
     abstract getDefaultType(): string;
-    private onFilterTypeChanged();
+    private onFilterTypeChanged;
     isFilterActive(): boolean;
-    setFilterType(filterType: string): void;
+    setFilterType(filterType: string, type: FilterConditionType): void;
+    isFilterConditionActive(type: FilterConditionType): boolean;
 }
-export interface IScalarFilterParams extends IFilterParams {
+export interface NullComparator {
+    equals?: boolean;
+    lessThan?: boolean;
+    greaterThan?: boolean;
+}
+export interface IComparableFilterParams extends IFilterParams {
+    suppressAndOrCondition: boolean;
+}
+export interface IScalarFilterParams extends IComparableFilterParams {
     inRangeInclusive?: boolean;
+    nullComparator?: NullComparator;
 }
 /**
  * Comparable filter with scalar underlying values (ie numbers and dates. Strings are not scalar so have to extend
  * ComparableBaseFilter)
  */
 export declare abstract class ScalarBaseFilter<T, P extends IScalarFilterParams, M> extends ComparableBaseFilter<T, P, M> {
+    static readonly DEFAULT_NULL_COMPARATOR: NullComparator;
     abstract comparator(): Comparator<T>;
+    private nullComparator;
     getDefaultType(): string;
-    doesFilterPass(params: IDoesFilterPassParams): boolean;
+    private translateNull;
+    individualFilterPasses(params: IDoesFilterPassParams, type: FilterConditionType): boolean;
+    private doIndividualFilterPasses;
 }

@@ -1,8 +1,8 @@
-// Type definitions for ag-grid v12.0.0
+// Type definitions for ag-grid-community v20.2.0
 // Project: http://www.ag-grid.com/
-// Definitions by: Niall Crosby <https://github.com/ceolter/>
+// Definitions by: Niall Crosby <https://github.com/ag-grid/>
 import { SerializedFilter } from "../interfaces/iFilter";
-import { Comparator, ScalarBaseFilter } from "./baseFilter";
+import { Comparator, FilterConditionType, ScalarBaseFilter } from "./baseFilter";
 import { INumberFilterParams } from "./textFilter";
 export interface SerializedNumberFilter extends SerializedFilter {
     filter: number;
@@ -10,28 +10,34 @@ export interface SerializedNumberFilter extends SerializedFilter {
     type: string;
 }
 export declare class NumberFilter extends ScalarBaseFilter<number, INumberFilterParams, SerializedNumberFilter> {
+    static LESS_THAN: string;
+    private eFilterTextField;
+    private eFilterTextConditionField;
+    private eFilterToTextField;
+    private eFilterToConditionText;
     private eNumberToPanel;
+    private eNumberToConditionPanel;
     filterNumber: any;
     filterNumberTo: any;
-    private eFilterToTextField;
-    private eFilterTextField;
-    static LESS_THAN: string;
+    filterNumberCondition: any;
+    filterNumberConditionTo: any;
     modelFromFloatingFilter(from: string): SerializedNumberFilter;
     getApplicableFilterTypes(): string[];
-    bodyTemplate(): string;
-    initialiseFilterBodyUi(): void;
+    bodyTemplate(type: FilterConditionType): string;
+    initialiseFilterBodyUi(type: FilterConditionType): void;
+    private addFilterChangedEventListeners;
     afterGuiAttached(): void;
     comparator(): Comparator<number>;
-    private onTextFieldsChanged();
-    filterValues(): number | number[];
-    private asNumber(value);
-    private stringToFloat(value);
-    setFilter(filter: any): void;
-    setFilterTo(filter: any): void;
-    getFilter(): any;
-    serialize(): SerializedNumberFilter;
-    parse(model: SerializedNumberFilter): void;
-    refreshFilterBodyUi(): void;
-    resetState(): void;
-    setType(filterType: string): void;
+    private onTextFieldsChanged;
+    filterValues(type: FilterConditionType): number | number[];
+    private asNumber;
+    private stringToFloat;
+    setFilter(filter: any, type: FilterConditionType): void;
+    setFilterTo(filter: any, type: FilterConditionType): void;
+    getFilter(type: FilterConditionType): any;
+    serialize(type: FilterConditionType): SerializedNumberFilter;
+    parse(model: SerializedNumberFilter, type: FilterConditionType): void;
+    refreshFilterBodyUi(type: FilterConditionType): void;
+    resetState(resetConditionFilterOnly?: boolean): void;
+    setType(filterType: string, type: FilterConditionType): void;
 }

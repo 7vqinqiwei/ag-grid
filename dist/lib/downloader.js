@@ -1,6 +1,6 @@
 /**
- * ag-grid - Advanced Data Grid / Data Table supporting Javascript / React / AngularJS / Web Components
- * @version v12.0.0
+ * ag-grid-community - Advanced Data Grid / Data Table supporting Javascript / React / AngularJS / Web Components
+ * @version v20.2.0
  * @link http://www.ag-grid.com/
  * @license MIT
  */
@@ -13,31 +13,35 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var context_1 = require("./context/context");
-var Downloader = (function () {
+var Downloader = /** @class */ (function () {
     function Downloader() {
     }
     Downloader.prototype.download = function (fileName, content, mimeType) {
         // for Excel, we need \ufeff at the start
         // http://stackoverflow.com/questions/17879198/adding-utf-8-bom-to-string-blob
-        var blobObject = new Blob(["\ufeff", content], {
-            type: mimeType
-        });
         // Internet Explorer
         if (window.navigator.msSaveOrOpenBlob) {
+            var blobObject = new Blob(["\ufeff", content], {
+                type: mimeType
+            });
             window.navigator.msSaveOrOpenBlob(blobObject, fileName);
         }
         else {
             // Chrome
-            var downloadLink = document.createElement("a");
-            downloadLink.href = window.URL.createObjectURL(blobObject);
-            downloadLink.download = fileName;
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
+            var element = document.createElement("a");
+            var blob = new Blob(["\ufeff", content], { type: "octet/stream" });
+            var url = window.URL.createObjectURL(blob);
+            element.setAttribute("href", url);
+            element.setAttribute("download", fileName);
+            element.style.display = "none";
+            document.body.appendChild(element);
+            element.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(element);
         }
     };
     Downloader = __decorate([
-        context_1.Bean('downloader')
+        context_1.Bean("downloader")
     ], Downloader);
     return Downloader;
 }());

@@ -1,13 +1,13 @@
 /**
- * ag-grid - Advanced Data Grid / Data Table supporting Javascript / React / AngularJS / Web Components
- * @version v12.0.0
+ * ag-grid-community - Advanced Data Grid / Data Table supporting Javascript / React / AngularJS / Web Components
+ * @version v20.2.0
  * @link http://www.ag-grid.com/
  * @license MIT
  */
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 /** The base frameworks, eg React & Angular 2, override this bean with implementations specific to their requirement. */
-var BaseFrameworkFactory = (function () {
+var BaseFrameworkFactory = /** @class */ (function () {
     function BaseFrameworkFactory() {
     }
     BaseFrameworkFactory.prototype.dateComponent = function (gridOptions) {
@@ -35,7 +35,7 @@ var BaseFrameworkFactory = (function () {
         return gridOptions.groupRowInnerRenderer;
     };
     BaseFrameworkFactory.prototype.setTimeout = function (action, timeout) {
-        setTimeout(action, timeout);
+        window.setTimeout(action, timeout);
     };
     return BaseFrameworkFactory;
 }());

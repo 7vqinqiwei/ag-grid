@@ -1,62 +1,44 @@
 {
-  "name": "ag-grid",
-  "version": "12.0.0",
+  "name": "ag-grid-community",
+  "version": "b21.0.1",
   "description": "Advanced Data Grid / Data Table supporting Javascript / React / AngularJS / Web Components",
   "main": "./main.js",
-  "scripts": {
-    "test": "exit 0",
-    "watchWebpack": "webpack --watch"
-  },
   "typings": "./main.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ceolter/ag-grid.git"
+    "url": "https://github.com/ag-grid/ag-grid.git"
   },
-  "keywords": [
-    "web-components",
-    "grid",
-    "data",
-    "table",
-    "angular",
-    "angular-component",
-    "react",
-    "react-component",
-    "angularjs",
-    "reactjs"
-  ],
-  "jspm": {
-    "main": "jspm-main"
+  "scripts": {
+    "initSubModules": "sh ./scripts/initialiseSubModules.sh",
+    "initLatest": "npm run initSubModules && sh ./scripts/switchToBranch.sh latest",
+    "initMarketing": "git checkout marketing && npm run updateCoreDependencies && npm run buildCore",
+    "initMaster": "npm run initSubModules && sh ./scripts/switchToBranch.sh master",
+    "updateExamples": "sh ./scripts/updateSubModules.sh",
+    "updateDependencies": "lerna bootstrap",
+    "updateCoreDependencies": "lerna bootstrap --scope ag-grid-community --scope ag-grid-enterprise --scope ag-grid-angular --scope ag-grid-react --scope ag-grid-vue --scope ag-grid-aurelia --scope ag-grid-docs",
+    "resetNonDocs": "git checkout packages/ag-grid-community && git checkout packages/ag-grid-community && git checkout packages/ag-grid-angular && git checkout packages/ag-grid-react && git checkout packages/ag-grid-aurelia && git checkout packages/ag-grid-vue ",
+    "test": "lerna run test",
+    "build": "lerna run build --ignore ag-grid-polymer-example --ignore ag-grid-charts-example",
+    "buildAndTest": "lerna run build --ignore ag-grid-polymer-example --ignore ag-grid-charts-example && lerna run test",
+    "buildCI": "lerna run build --ignore ag-grid-charts-example",
+    "buildRelease": "lerna run build",
+    "buildCore": "lerna run build --scope ag-grid-community --scope ag-grid-enterprise --scope ag-grid-angular --scope ag-grid-react --scope ag-grid-vue --scope ag-grid-aurelia",
+    "buildVanilla": "lerna run build --scope ag-grid-community --scope ag-grid-enterprise",
+    "buildAngular": "lerna run build --scope ag-grid-community --scope ag-grid-angular",
+    "buildVue": "lerna run build --scope ag-grid-community --scope ag-grid-vue",
+    "buildReact": "lerna run build --scope ag-grid-community --scope ag-grid-react",
+    "buildAurelia": "lerna run build --scope ag-grid-community --scope ag-grid-aurelia",
+    "docs": "cd packages/ag-grid-docs && gulp serve",
+    "updateAndRebuild": "npm run updateDependencies && npm run build",
+    "updateAndRebuildFull": "npm run updateDependencies && npm run buildCI",
+    "initIntelliJ": "cp .idea/workspace.xml.default .idea/workspace.xml",
+    "init": "npm run initLatest && npm run updateAndRebuild",
+    "initFullBuild": "npm run initLatest && npm run updateAndRebuildFull"
   },
-  "author": "Niall Crosby <niall.crosby@ag-grid.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ceolter/ag-grid/issues"
-  },
-  "homepage": "http://www.ag-grid.com/",
   "devDependencies": {
-    "gulp": "3.9.0",
-    "gulp-foreach": "0.1.0",
-    "gulp-rename": "1.2.2",
-    "gulp-stylus": "2.2.0",
-    "gulp-uglify": "1.5.1",
-    "gulp-typescript": "2.10.0",
-    "gulp-sourcemaps": "1.5.2",
-    "gulp-clean": "0.3.1",
-    "gulp-header": "1.7.0",
-    "gulp-tsd": "0.0.4",
-    "style-loader": "0.13.0",
-    "css-loader": "0.23.1",
-    "json-stable-stringify": "1.0.0",
-    "jasmine-core": "2.4.1",
-    "gulp-jasmine": "2.2.1",
-    "nib": "^1.1.0",
-    "stylus": "0.53.0",
-    "vinyl-buffer": "1.0.0",
-    "typescript": "2.4.1",
-    "merge2": "0.3.6",
-    "webpack-stream": "3.1.0",
-    "webpack": "2.2.1",
-    "gulp-replace": "0.5.4",
-    "gulp-if": "2.0.1"
-  }
+    "archiver": "^3.0.0",
+    "lerna": "^2.11.0",
+    "walk": "^2.3.14"
+  },
+  "dependencies": {}
 }

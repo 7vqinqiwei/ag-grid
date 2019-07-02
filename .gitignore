@@ -1,19 +1,14 @@
-node_modules/
-bower_components/
-web-root/
-src/ts/*.js
-src/ts/**/*.js
-
-.idea/encodings.xml
-
-.idea/misc.xml
-
-.idea/modules.xml
-
-.idea/vcs.xml
-
 .idea/workspace.xml
+.idea/tasks.xml
+.idea/codeStyles/codeStyleConfig.xml
+.idea/codeStyles/Project.xml
+.idea/encodings.xml
+/.idea/atlassian-ide-plugin.xml
 
-ag-grid.iml
+.DS_Store
+lerna-debug.log
+npm-debug.log
+node_modules
 
+package-lock.json
 

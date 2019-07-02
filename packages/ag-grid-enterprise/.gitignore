@@ -1,0 +1,11 @@
+src/*.js
+src/**/*.js
+
+node_modules/
+coverage/
+
+ag-grid-enterprise.iml
+
+package-lock.json
+
+module.tgz

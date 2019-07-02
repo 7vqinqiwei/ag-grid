@@ -1,21 +1,16 @@
-// Type definitions for ag-grid v12.0.0
+// Type definitions for ag-grid-community v20.1.0
 // Project: http://www.ag-grid.com/
-// Definitions by: Niall Crosby <https://github.com/ceolter/>
-import { ICellEditorComp, ICellEditorParams } from "./cellEditors/iCellEditor";
+// Definitions by: Niall Crosby <https://github.com/ag-grid/>
+import { ICellEditorComp, ICellEditorParams } from "../interfaces/iCellEditor";
+import { ColDef } from "../entities/colDef";
+import { Promise } from "../utils";
 export declare class CellEditorFactory {
-    private static TEXT;
-    private static SELECT;
-    private static POPUP_TEXT;
-    private static POPUP_SELECT;
-    private static LARGE_TEXT;
     private context;
+    private componentResolver;
     private gridOptionsWrapper;
-    private cellEditorMap;
-    private init();
+    private init;
     addCellEditor(key: string, cellEditor: {
         new (): ICellEditorComp;
     }): void;
-    createCellEditor(key: string | {
-        new (): ICellEditorComp;
-    }, params: ICellEditorParams): ICellEditorComp;
+    createCellEditor(column: ColDef, params: ICellEditorParams): Promise<ICellEditorComp>;
 }

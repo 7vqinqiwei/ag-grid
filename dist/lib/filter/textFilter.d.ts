@@ -1,8 +1,8 @@
-// Type definitions for ag-grid v12.0.0
+// Type definitions for ag-grid-community v20.2.0
 // Project: http://www.ag-grid.com/
-// Definitions by: Niall Crosby <https://github.com/ceolter/>
-import { IFilterParams, IDoesFilterPassParams, SerializedFilter } from "../interfaces/iFilter";
-import { ComparableBaseFilter, IScalarFilterParams } from "./baseFilter";
+// Definitions by: Niall Crosby <https://github.com/ag-grid/>
+import { IDoesFilterPassParams, SerializedFilter } from "../interfaces/iFilter";
+import { ComparableBaseFilter, IScalarFilterParams, FilterConditionType, IComparableFilterParams } from "./baseFilter";
 export interface SerializedTextFilter extends SerializedFilter {
     filter: string;
     type: string;
@@ -16,32 +16,38 @@ export interface TextFormatter {
 export interface INumberFilterParams extends IScalarFilterParams {
     debounceMs?: number;
 }
-export interface ITextFilterParams extends IFilterParams {
+export interface ITextFilterParams extends IComparableFilterParams {
     textCustomComparator?: TextComparator;
     debounceMs?: number;
+    caseSensitive?: boolean;
 }
 export declare class TextFilter extends ComparableBaseFilter<string, ITextFilterParams, SerializedTextFilter> {
     private eFilterTextField;
+    private eFilterConditionTextField;
     private filterText;
+    private filterConditionText;
     private comparator;
     private formatter;
     static DEFAULT_FORMATTER: TextFormatter;
+    static DEFAULT_LOWERCASE_FORMATTER: TextFormatter;
     static DEFAULT_COMPARATOR: TextComparator;
     getDefaultType(): string;
     customInit(): void;
     modelFromFloatingFilter(from: string): SerializedTextFilter;
     getApplicableFilterTypes(): string[];
-    bodyTemplate(): string;
-    initialiseFilterBodyUi(): void;
-    refreshFilterBodyUi(): void;
+    bodyTemplate(type: FilterConditionType): string;
+    initialiseFilterBodyUi(type: FilterConditionType): void;
+    private addFilterChangedListener;
+    refreshFilterBodyUi(type: FilterConditionType): void;
     afterGuiAttached(): void;
-    filterValues(): string;
-    doesFilterPass(params: IDoesFilterPassParams): boolean;
-    private onFilterTextFieldChanged();
-    setFilter(filter: string): void;
+    filterValues(type: FilterConditionType): string;
+    individualFilterPasses(params: IDoesFilterPassParams, type: FilterConditionType): boolean;
+    private checkIndividualFilter;
+    private onFilterTextFieldChanged;
+    setFilter(filter: string, type: FilterConditionType): void;
     getFilter(): string;
-    resetState(): void;
-    serialize(): SerializedTextFilter;
-    parse(model: SerializedTextFilter): void;
-    setType(filterType: string): void;
+    resetState(resetConditionFilterOnly?: boolean): void;
+    serialize(type: FilterConditionType): SerializedTextFilter;
+    parse(model: SerializedTextFilter, type: FilterConditionType): void;
+    setType(filterType: string, type: FilterConditionType): void;
 }

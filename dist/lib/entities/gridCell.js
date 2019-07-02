@@ -1,18 +1,18 @@
 /**
- * ag-grid - Advanced Data Grid / Data Table supporting Javascript / React / AngularJS / Web Components
- * @version v12.0.0
+ * ag-grid-community - Advanced Data Grid / Data Table supporting Javascript / React / AngularJS / Web Components
+ * @version v20.2.0
  * @link http://www.ag-grid.com/
  * @license MIT
  */
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var utils_1 = require("../utils");
 var gridRow_1 = require("./gridRow");
-var GridCell = (function () {
+var utils_1 = require("../utils");
+var GridCell = /** @class */ (function () {
     function GridCell(gridCellDef) {
         this.rowIndex = gridCellDef.rowIndex;
         this.column = gridCellDef.column;
-        this.floating = utils_1.Utils.makeNull(gridCellDef.floating);
+        this.floating = utils_1._.makeNull(gridCellDef.floating);
     }
     GridCell.prototype.getGridCellDef = function () {
         return {
@@ -29,6 +29,12 @@ var GridCell = (function () {
     };
     GridCell.prototype.createId = function () {
         return this.rowIndex + "." + this.floating + "." + this.column.getId();
+    };
+    GridCell.prototype.equals = function (other) {
+        var colsMatch = this.column === other.column;
+        var floatingMatch = this.floating === other.floating;
+        var indexMatch = this.rowIndex === other.rowIndex;
+        return colsMatch && floatingMatch && indexMatch;
     };
     return GridCell;
 }());
