@@ -1,8 +1,0 @@
-src
-tsconfig*
-tslint*
-tests
-
-!lib/
-!dist/
-

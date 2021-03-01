@@ -4,11 +4,26 @@
 .idea/codeStyles/Project.xml
 .idea/encodings.xml
 /.idea/atlassian-ide-plugin.xml
+.vscode
+
+.lernaBuildChain.cache.json
 
 .DS_Store
 lerna-debug.log
 npm-debug.log
 node_modules
+.scannerwork
 
 package-lock.json
+docs_are_running
 
+*.nosync
+
+**/cypress/videos
+
+.hash
+
+archive*.zip
+release*.zip
+
+grid-packages/ag-grid-docs/documentation/algolia-ag-grid-dev_*.json

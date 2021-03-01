@@ -1,7 +1,12 @@
 {
-  "lerna": "2.11.0",
   "packages": [
-    "packages/*"
+    "community-modules/*",
+    "enterprise-modules/*",
+    "charts-packages/*",
+    "grid-packages/*",
+    "examples-charts/*",
+    "examples-grid/*",
+    "grid-packages/ag-grid-docs/documentation/"
   ],
   "command": {
     "bootstrap": {
@@ -10,5 +15,5 @@
       ]
     }
   },
-  "version": "21.0.1"
+  "version": "25.1.0"
 }
